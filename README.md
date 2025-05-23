@@ -6,6 +6,11 @@ My first attempt at making a well structured flask backend api.
 
 1. Create and activate a python venv.
 
+```
+python -m venv venv
+venv/Scripts/activate
+```
+
 2. Install the dependencies with:
 
 ```
