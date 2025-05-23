@@ -17,7 +17,10 @@ def add_user():
             'message': 'Need a json body'
         }
     
-    if 'name' in request.json and 'password' in request.json and 'age' in request.json:
+    if all(
+        request.json.get(key) != None
+        for key in ['name', 'password', 'age']
+    ):
         return users_services.create_user(request.json['name'], request.json['password'], request.json['age'])
     
     return {
