@@ -17,14 +17,13 @@ def add_user():
             'message': 'Need a json body'
         }
     
-    json = request.json
-    name = json['name']
-    password = json['password']
-    age = json['age']
-
-    user = users_services.create_user(name, password, age)
-    return user
+    if 'name' in request.json and 'password' in request.json and 'age' in request.json:
+        return users_services.create_user(request.json['name'], request.json['password'], request.json['age'])
     
+    return {
+      'status': 'error',
+      'message': 'Not enough or incorrect data'
+    }
 
 @users_router.get('/users/<int:id>')
 def get_user(id):
@@ -46,23 +45,28 @@ def update_user(id):
             'message': 'Need a json body'
         }
     
-    json = request.json
     user = users_services.get_user(id)
+    changes = 0
 
-    if 'name' in json:
-        name = json['name']
-        user = users_services.set_name(id, name)
+    if 'name' in request.json:
+        user['name'] = request.json['name']
+        changes += 1
 
-    if 'password' in json:
-        password = json['password']
-        user = users_services.set_password(id, password)
+    if 'password' in request.json:
+        user['password'] = request.json['password']
+        changes += 1
 
-    if 'info' in json:
-        info = json['info']
-        user = users_services.set_info(id, info)
+    if 'info' in request.json:
+        user['info'] = request.json['info']
+        changes += 1
 
-    return user
-    
+    if changes > 0:
+      return users_services.update_user(user)
+
+    return {
+      'status': 'error',
+      'message': 'No parameters specified'
+    }
 
 @users_router.delete('/users/<int:id>')
 def delete_user(id):

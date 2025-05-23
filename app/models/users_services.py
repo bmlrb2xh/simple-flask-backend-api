@@ -57,50 +57,20 @@ def delete_user(user_id: int) -> dict:
         ses.commit()
         return user.to_dict()
 
-def set_name(user_id: int, name: str) -> dict:
+def update_user(updated_user: dict) -> dict:
     with state.session as ses:
         user = (
             ses
             .query(Users)
-            .filter(Users.id == user_id)
+            .filter(Users.id == updated_user['id'])
             .first()
         )
 
         if not user:
             return None
         
-        user.name = name
-        ses.commit()
-        return user.to_dict()
-    
-def set_password(user_id: int, password: str) -> dict:
-    with state.session as ses:
-        user = (
-            ses
-            .query(Users)
-            .filter(Users.id == user_id)
-            .first()
-        )
-
-        if not user:
-            return None
-        
-        user.password = password
-        ses.commit()
-        return user.to_dict()
-
-def set_info(user_id: int, info: str) -> dict:
-    with state.session as ses:
-        user = (
-            ses
-            .query(Users)
-            .filter(Users.id == user_id)
-            .first()
-        )
-
-        if not user:
-            return None
-        
-        user.info = info
+        user.name = updated_user['name']
+        user.password = updated_user['password']
+        user.info = updated_user['info']
         ses.commit()
         return user.to_dict()
